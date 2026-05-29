@@ -82,18 +82,15 @@
       args:
         chdir: /opt/devops-ecommerce
       ignore_errors: yes
-      become_user: ubuntu
 
     - name: Deploy container stack via Docker Compose
       command: docker compose up -d --build
       args:
         chdir: /opt/devops-ecommerce
-      become_user: ubuntu
 
     - name: Confirm Docker containers status check
       command: docker ps
       register: docker_status
-      become_user: ubuntu
 
     - name: Output active container list
       debug:
