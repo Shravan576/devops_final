@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # Database layer: persistent MongoDB instance
+  mongodb:
+    image: mongo:6.0
+    container_name: devops-mongodb
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - capstone-network
+
+  # Logic tier: Node.js / Express REST API backend
+  backend:
+    container_name: devops-backend-api
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
+    environment:
+      - PORT=5000
+      - MONGODB_URI=mongodb://mongodb:27017/ecommerce
+    depends_on:
+      - mongodb
+    networks:
+      - capstone-network
+
+  # Presentation tier: Nginx serving React optimized client assets
+  frontend:
+    container_name: devops-frontend-ui
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:80"
+    restart: unless-stopped
+    depends_on:
+      - backend
+    networks:
+      - capstone-network
+
+  # Metrics scraping exporter
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter:1.0.0
+    container_name: devops-nginx-exporter
+    ports:
+      - "9113:9113"
+    command:
+      - -nginx.scrape-uri=http://frontend/nginx_status
+    depends_on:
+      - frontend
+    restart: unless-stopped
+    networks:
+      - capstone-network
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  capstone-network:
+    driver: bridge

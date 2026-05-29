@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: default
+  labels:
+    app: backend-api
+spec:
+  ports:
+  - name: http
+    port: 5000
+    targetPort: 5000
+  selector:
+    app: backend-api
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: default
+  labels:
+    app: devops-ecommerce-ui
+spec:
+  type: LoadBalancer
+  selector:
+    app: devops-ecommerce-ui
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    nodePort: 30080

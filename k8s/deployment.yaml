@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deploy
+  namespace: default
+  labels:
+    app: backend-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend-api
+  template:
+    metadata:
+      labels:
+        app: backend-api
+    spec:
+      containers:
+      - name: backend-container
+        image: your-dockerhub-username/devops-backend-api:latest
+        ports:
+        - containerPort: 5000
+          name: apiport
+        env:
+        - name: PORT
+          value: "5000"
+        - name: MONGODB_URI
+          # Connect using root credentials bound from Kubernetes secrets to StatefulSet service
+          value: "mongodb://mongo-admin:db-secret-password-123@mongodb-service:27017/ecommerce?authSource=admin"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "150m"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deploy
+  namespace: default
+  labels:
+    app: devops-ecommerce-ui
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: devops-ecommerce-ui
+  template:
+    metadata:
+      labels:
+        app: devops-ecommerce-ui
+    spec:
+      containers:
+      - name: frontend-container
+        image: your-dockerhub-username/devops-smart-ecommerce:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: http
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "150m"
+        envFrom:
+        - configMapRef:
+            name: ecommerce-config
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 20
