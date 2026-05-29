@@ -71,7 +71,7 @@
 
     - name: Clone DevOps project codebase from GitHub repository
       git:
-        repo: 'https://github.com/your-github-username/DevOps-Ecommerce-Capstone.git'
+        repo: 'https://github.com/Shravan576/devops_final.git'
         dest: /opt/devops-ecommerce
         version: main
         force: yes
