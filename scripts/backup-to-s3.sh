@@ -21,14 +21,17 @@ echo "----------------------------------------------------"
 rm -rf "$BACKUP_DIR"
 mkdir -p "$BACKUP_DIR"
 
-# 2. Run MongoDB dump
-echo "Executing database dump..."
-mongodump --host "$MONGODB_HOST" --port "$MONGODB_PORT" --out "$BACKUP_DIR/dump"
+# 2. Run MongoDB dump via Docker
+echo "Executing database dump inside container..."
+docker exec devops-mongodb mongodump --out /tmp/dump
 
 if [ $? -ne 0 ]; then
     echo "ERROR: Database dump failed. Exiting backup pipeline."
     exit 1
 fi
+
+docker cp devops-mongodb:/tmp/dump "$BACKUP_DIR/dump"
+docker exec devops-mongodb rm -rf /tmp/dump
 
 # 3. Create compressed tar archive
 echo "Packaging database archive..."
