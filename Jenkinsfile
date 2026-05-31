@@ -48,14 +48,14 @@ pipeline {
 
         stage('Docker Compilation') {
             steps {
-                echo 'Assembling multi-stage Docker image layers...'
-                script {
-                    dockerImage = docker.build("${DOCKER_HUB_USER}/${IMAGE_NAME}:${IMAGE_TAG}")
-                    dockerLatest = docker.build("${DOCKER_HUB_USER}/${IMAGE_NAME}:latest")
-                }
+                echo 'Assembling local Docker image layers...'
+                sh "docker build -t local/${IMAGE_NAME}:latest ."
             }
         }
 
+        // Commented out external registry publication and kubernetes deploy steps
+        // to allow running the pipeline locally without credentials.
+        /*
         stage('Registry Publication') {
             steps {
                 echo 'Publishing container image tag metrics to Docker Hub...'
@@ -73,27 +73,25 @@ pipeline {
             steps {
                 echo 'Deploying Docker image updates into Kubernetes Cluster namespace...'
                 script {
-                    // Inject Kubeconfig credentials and run deployments
                     withCredentials([file(credentialsId: "${KUBE_CONFIG_CREDS}", variable: 'KUBECONFIG')]) {
                         sh "kubectl --kubeconfig=${KUBECONFIG} apply -f k8s/configmap.yaml"
                         sh "kubectl --kubeconfig=${KUBECONFIG} apply -f k8s/deployment.yaml"
                         sh "kubectl --kubeconfig=${KUBECONFIG} apply -f k8s/service.yaml"
                         sh "kubectl --kubeconfig=${KUBECONFIG} apply -f k8s/hpa.yaml"
                         
-                        // Set the container image explicitly to trigger rolling updates
                         sh "kubectl --kubeconfig=${KUBECONFIG} set image deployment/frontend-deploy frontend-container=${DOCKER_HUB_USER}/${IMAGE_NAME}:${IMAGE_TAG} --record"
                         sh "kubectl --kubeconfig=${KUBECONFIG} rollout status deployment/frontend-deploy"
                     }
                 }
             }
         }
+        */
     }
 
     post {
         always {
-            echo 'Pipeline run finalization. Cleaning up temporary layers...'
-            sh "docker rmi ${DOCKER_HUB_USER}/${IMAGE_NAME}:${IMAGE_TAG} || true"
-            sh "docker rmi ${DOCKER_HUB_USER}/${IMAGE_NAME}:latest || true"
+            echo 'Pipeline run finalization. Cleaning up local build layers...'
+            sh "docker rmi local/${IMAGE_NAME}:latest || true"
             cleanWs()
         }
         success {
