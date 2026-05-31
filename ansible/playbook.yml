@@ -26,15 +26,15 @@
         state: directory
         mode: '0755'
 
-    - name: Add Docker GPG key signature
-      apt_key:
+    - name: Download Docker GPG key
+      get_url:
         url: https://download.docker.com/linux/ubuntu/gpg
-        state: present
-        keyring: /etc/apt/keyrings/docker.gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: '0644'
 
     - name: Set up Docker APT repository setup
       apt_repository:
-        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
         state: present
         filename: docker
 
