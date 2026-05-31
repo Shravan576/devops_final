@@ -8,7 +8,7 @@
 DATE=$(date +%Y-%m-%d_%H%M%S)
 BACKUP_DIR="/tmp/mongodb_backups"
 ARCHIVE_NAME="mongodb_backup_$DATE.tar.gz"
-S3_BUCKET="your-s3-bucket-name"
+S3_BUCKET="shravan-devops-2026-bucket1"
 MONGODB_HOST=${MONGODB_HOST:-"localhost"}
 MONGODB_PORT=${MONGODB_PORT:-"27017"}
 
