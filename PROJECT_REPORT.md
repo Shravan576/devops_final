@@ -96,7 +96,7 @@ The system follows a microservice-ready containerized model:
 
 ---
 
-## Chapter 4: DevOps Orchestration & CI/CD Pipelines
+## Chapter 4: DevOps Orchestration & CI/CD Pipeline
 
 ### 4.1 Jenkins Automation
 The declarative pipeline guarantees consistency. The `Jenkinsfile` runs:
