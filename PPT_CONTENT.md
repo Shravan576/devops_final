@@ -12,7 +12,7 @@ This document provides a slide-by-slide text plan to help you build your project
 
 ---
 
-## Slide 2: Project Objectives
+## Slide 2: Project Objective
 * **Challenges in traditional web hosting**:
   * Environmental inconsistencies ("works on my machine" syndrome).
   * Manual build and deployment bottlenecks.
