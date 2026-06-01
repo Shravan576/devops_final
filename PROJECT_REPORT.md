@@ -109,7 +109,7 @@ The deployment uses Kubernetes manifests. The Horizontal Pod Autoscaler reads me
 
 ---
 
-## Chapter 5: Verification & System Results
+## Chapter 5: Verification & System Result
 
 ### 5.1 Test Logs (Local Build Verification)
 * Vite compiled client files successfully.
