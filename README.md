@@ -36,7 +36,7 @@ graph LR
 
 ---
 
-## 🚀 Key Features
+## 🚀 Key Feature
 
 * **High-Fidelity UI/UX**: Sleek dark/light theme options, beautiful transitions, and product inventory catalogs.
 * **DevOps Simulator widgets**: Custom dashboard overlays rendering live cluster active nodes, memory loads, and pipeline metrics.
