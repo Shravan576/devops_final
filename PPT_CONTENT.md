@@ -59,7 +59,7 @@ This document provides a slide-by-slide text plan to help you build your project
 
 ---
 
-## Slide 6: Continuous Integration Pipeline (Jenkins)
+## Slide 6: Continuous Integration Pipeline (Jenkin)
 * **Automated CI/CD Stages**:
   * **Checkout**: Clones the GitHub repository.
   * **Install**: Downloads packages cleanly via `npm ci`.
