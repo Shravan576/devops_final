@@ -96,7 +96,7 @@ The system follows a microservice-ready containerized model:
 
 ---
 
-## Chapter 4: DevOps Orchestration & CI/CD Pipelines
+## Chapter 4: DevOps Orchestration & CI/CD Pipeline
 
 ### 4.1 Jenkins Automation
 The declarative pipeline guarantees consistency. The `Jenkinsfile` runs:
@@ -109,7 +109,7 @@ The deployment uses Kubernetes manifests. The Horizontal Pod Autoscaler reads me
 
 ---
 
-## Chapter 5: Verification & System Results
+## Chapter 5: Verification & System Result
 
 ### 5.1 Test Logs (Local Build Verification)
 * Vite compiled client files successfully.
