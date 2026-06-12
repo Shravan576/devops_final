@@ -99,7 +99,7 @@ export default function Home() {
       {/* Hero Welcome Section */}
       <div className="text-center py-10 md:py-14 relative">
         <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-          Smart E-Commerce Websites
+          Smart E-Commerce Website
         </h1>
         <p className="mt-3 max-w-2xl mx-auto text-sm md:text-base text-slate-500 dark:text-slate-400 leading-relaxed">
           Explore a fully responsive React storefront containerized using multi-stage Docker builds, controlled via Kubernetes Deployments, and delivered through an automated CI/CD pipeline.
