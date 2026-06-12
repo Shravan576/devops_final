@@ -56,12 +56,7 @@ pipeline {
         stage('Deploy Live') {
             steps {
                 echo 'Deploying latest changes to live container stack...'
-                sh '''
-                    sudo git config --global --add safe.directory /home/ubuntu/devops_final
-                    cd /home/ubuntu/devops_final
-                    sudo git pull origin main
-                    sudo docker compose up -d --build
-                '''
+                sh 'sudo bash -c "cd /home/ubuntu/devops_final && git config --global --add safe.directory /home/ubuntu/devops_final && git pull origin main && docker compose up -d --build"'
             }
         }
     }
