@@ -53,39 +53,17 @@ pipeline {
             }
         }
 
-        // Commented out external registry publication and kubernetes deploy steps
-        // to allow running the pipeline locally without credentials.
-        /*
-        stage('Registry Publication') {
+        stage('Deploy Live') {
             steps {
-                echo 'Publishing container image tag metrics to Docker Hub...'
-                script {
-                    withCredentials([usernamePassword(credentialsId: "${REGISTRY_CREDS_ID}", usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-                        sh "echo ${PASS} | docker login -u ${USER} --password-stdin"
-                        sh "docker push ${DOCKER_HUB_USER}/${IMAGE_NAME}:${IMAGE_TAG}"
-                        sh "docker push ${DOCKER_HUB_USER}/${IMAGE_NAME}:latest"
-                    }
-                }
+                echo 'Deploying latest changes to live container stack...'
+                sh '''
+                    sudo git config --global --add safe.directory /home/ubuntu/devops_final
+                    cd /home/ubuntu/devops_final
+                    sudo git pull origin main
+                    sudo docker compose up -d --build
+                '''
             }
         }
-
-        stage('Kubernetes Orchestration') {
-            steps {
-                echo 'Deploying Docker image updates into Kubernetes Cluster namespace...'
-                script {
-                    withCredentials([file(credentialsId: "${KUBE_CONFIG_CREDS}", variable: 'KUBECONFIG')]) {
-                        sh "kubectl --kubeconfig=${KUBECONFIG} apply -f k8s/configmap.yaml"
-                        sh "kubectl --kubeconfig=${KUBECONFIG} apply -f k8s/deployment.yaml"
-                        sh "kubectl --kubeconfig=${KUBECONFIG} apply -f k8s/service.yaml"
-                        sh "kubectl --kubeconfig=${KUBECONFIG} apply -f k8s/hpa.yaml"
-                        
-                        sh "kubectl --kubeconfig=${KUBECONFIG} set image deployment/frontend-deploy frontend-container=${DOCKER_HUB_USER}/${IMAGE_NAME}:${IMAGE_TAG} --record"
-                        sh "kubectl --kubeconfig=${KUBECONFIG} rollout status deployment/frontend-deploy"
-                    }
-                }
-            }
-        }
-        */
     }
 
     post {
